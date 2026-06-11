@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: Run Lambda Handler Locally",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/debug_handler.py",
+      "console": "integratedTerminal",
+      "env": {
+        "ENVIRONMENT": "local",
+        "SOURCE_NAME": "caged",
+        "POWERTOOLS_SERVICE_NAME": "boilerplate-lambda-local",
+        "POWERTOOLS_LOG_LEVEL": "DEBUG",
+        "POWERTOOLS_LOG_EVENT": "false",
+        "DEBUGPY_ENABLED": "false"
+      }
+    },
+    {
+      "name": "Python: Attach to Lambda debugpy",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": {
+        "host": "127.0.0.1",
+        "port": 5678
+      },
+      "justMyCode": true
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+[project]
+name = "download-lambda"
+version = "0.1.0"
+description = "DownloadLambda"
+requires-python = ">=3.14"
+dependencies = [
+    "serverless-toolkit",
+]
+
+[tool.uv.sources]
+serverless-toolkit = { git = "https://github.com/Stentzler/caged-serverless-toolkit.git", tag = "v0.1.0" }
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.0.0",
+    "debugpy>=1.8.0",
+    "pytest>=8.0.0",
+    "ruff>=0.11.0",
+]
+
+[tool.ruff]
+extend = "./config/ruff.toml"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
