@@ -1,3 +1,7 @@
 {
-    "teste": "teste"
+  "filename": "CAGEDFOR202604.7z",
+  "ftp_url": "ftp://ftp.mtps.gov.br/pdet/microdados/NOVO%20CAGED/2026/202604/CAGEDFOR202604.7z",
+  "reference_month": "202604",
+  "reference_year": "2026",
+  "s3_key": "raw/caged/year=2026/month=04/file_type=late_movement/CAGEDFOR202604.7z"
 }

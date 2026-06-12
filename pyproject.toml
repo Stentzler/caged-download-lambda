@@ -1,7 +1,7 @@
 [project]
-name = "download-lambda"
+name = "caged-download-lambda"
 version = "0.1.0"
-description = "DownloadLambda"
+description = "AWS Lambda that downloads Novo CAGED archives and uploads them to S3."
 requires-python = ">=3.14"
 dependencies = [
     "serverless-toolkit",

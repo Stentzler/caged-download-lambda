@@ -2,9 +2,9 @@
 
 ## Overview
 
-This repository contains one AWS Lambda that scans the Novo CAGED FTP server,
-compares available files with the DynamoDB registry, and returns files that need
-downstream processing.
+This repository contains one AWS Lambda that checks the downloaded-file
+registry, downloads one Novo CAGED FTP archive, uploads it to S3, and records
+the completed transfer in DynamoDB.
 
 Follow the global `clean-code` skill for general implementation quality. The
 rules below describe this repository's architecture and local conventions.

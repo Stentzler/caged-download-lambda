@@ -7,18 +7,18 @@ SRC_DIR = PROJECT_ROOT / "src"
 
 sys.path.insert(0, str(SRC_DIR))
 
-from lambda_name.handler import lambda_handler
+from handler import lambda_handler  # noqa: E402
 
 
 class LocalLambdaContext:
-    function_name = "local-boilerplate-lambda"
+    function_name = "local-download-lambda"
     function_version = "$LATEST"
     invoked_function_arn = (
-        "arn:aws:lambda:local:000000000000:function:local-boilerplate-lambda"
+        "arn:aws:lambda:local:000000000000:function:local-download-lambda"
     )
     memory_limit_in_mb = 128
     aws_request_id = "local-request-id"
-    log_group_name = "/aws/lambda/local-boilerplate-lambda"
+    log_group_name = "/aws/lambda/local-download-lambda"
     log_stream_name = "local"
 
 

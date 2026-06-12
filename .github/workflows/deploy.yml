@@ -1,4 +1,4 @@
-name: Deploy Check Availability Lambda
+name: Deploy Download Lambda
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
   deploy:
     uses: Stentzler/lambda-cicd/.github/workflows/lambda-python-sam.yml@main
     with:
-      lambda_name: check-availability
+      lambda_name: download
       python_version: "3.14"
       aws_region: us-east-1
       dev_branch: develop

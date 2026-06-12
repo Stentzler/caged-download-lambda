@@ -22,7 +22,7 @@ package:
 		--python .venv/bin/python \
 		.
 	cp -r src/* build/
-	cd build && zip -r ../dist/check-availability-lambda.zip .
+	cd build && zip -r ../dist/download-lambda.zip .
 
 clean:
 	rm -rf build dist .pytest_cache .ruff_cache
