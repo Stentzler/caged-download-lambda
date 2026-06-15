@@ -10,74 +10,12 @@ permissions:
   contents: read
   id-token: write
 
-env:
-  AWS_REGION: us-east-1
-  FUNCTION_NAME: caged-dev-download
-  ALIAS_NAME: dev
-
 jobs:
-  deploy:
-    environment:
-      name: dev
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.14"
-
-      - name: Set up uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
-
-      - name: Install dependencies
-        run: uv sync --frozen
-
-      - name: Run tests and lint
-        run: |
-          uv run pytest
-          uv run ruff check .
-          uv run ruff format --check .
-
-      - name: Package Lambda
-        run: make package
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Deploy function code
-        run: |
-          aws lambda update-function-code \
-            --function-name "$FUNCTION_NAME" \
-            --zip-file fileb://dist/download-lambda.zip
-          aws lambda wait function-updated-v2 --function-name "$FUNCTION_NAME"
-
-      - name: Publish function version
-        run: |
-          VERSION=$(aws lambda publish-version \
-            --function-name "$FUNCTION_NAME" \
-            --query Version \
-            --output text)
-          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
-
-      - name: Promote environment alias
-        run: |
-          aws lambda update-alias \
-            --function-name "$FUNCTION_NAME" \
-            --name "$ALIAS_NAME" \
-            --function-version "$VERSION"
-
-      - name: Verify environment alias
-        run: |
-          aws lambda get-alias \
-            --function-name "$FUNCTION_NAME" \
-            --name "$ALIAS_NAME" \
-            --query '{Alias:Name,Version:FunctionVersion}'
+  deploy-dev:
+    uses: Stentzler/caged-lambda-cicd/.github/workflows/lambda-python-zip.yml@main
+    with:
+      environment_name: dev
+      function_name: caged-dev-download
+      alias_name: dev
+      zip_path: dist/download-lambda.zip
+    secrets: inherit
