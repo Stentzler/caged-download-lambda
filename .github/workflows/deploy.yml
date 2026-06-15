@@ -13,9 +13,12 @@ permissions:
 env:
   AWS_REGION: us-east-1
   FUNCTION_NAME: caged-dev-download
+  ALIAS_NAME: dev
 
 jobs:
   deploy:
+    environment:
+      name: dev
     runs-on: ubuntu-latest
 
     steps:
@@ -56,3 +59,25 @@ jobs:
             --function-name "$FUNCTION_NAME" \
             --zip-file fileb://dist/download-lambda.zip
           aws lambda wait function-updated-v2 --function-name "$FUNCTION_NAME"
+
+      - name: Publish function version
+        run: |
+          VERSION=$(aws lambda publish-version \
+            --function-name "$FUNCTION_NAME" \
+            --query Version \
+            --output text)
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Promote environment alias
+        run: |
+          aws lambda update-alias \
+            --function-name "$FUNCTION_NAME" \
+            --name "$ALIAS_NAME" \
+            --function-version "$VERSION"
+
+      - name: Verify environment alias
+        run: |
+          aws lambda get-alias \
+            --function-name "$FUNCTION_NAME" \
+            --name "$ALIAS_NAME" \
+            --query '{Alias:Name,Version:FunctionVersion}'
