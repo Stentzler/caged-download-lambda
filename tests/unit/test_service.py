@@ -177,6 +177,10 @@ def test_execute_downloads_uploads_and_removes_temporary_file(tmp_path: Path) ->
         "reference_year": "2026",
         "s3_bucket": "caged-raw-data",
         "s3_key": VALID_EVENT["s3_key"],
+        "s3_uri": (
+            "s3://caged-raw-data/raw/caged/year=2026/month=04/"
+            "file_type=movement/CAGEDMOV202604.7z"
+        ),
         "size_bytes": 15,
     }
 
@@ -216,6 +220,10 @@ def test_execute_skips_file_already_processed_in_registry(
         "reference_year": "2026",
         "s3_bucket": "caged-raw-data",
         "s3_key": VALID_EVENT["s3_key"],
+        "s3_uri": (
+            "s3://caged-raw-data/raw/caged/year=2026/month=04/"
+            "file_type=movement/CAGEDMOV202604.7z"
+        ),
     }
     assert not ftp.login_called
     assert s3_client.uploads == []

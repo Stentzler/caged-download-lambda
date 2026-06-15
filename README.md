@@ -5,6 +5,9 @@ stores it temporarily in `/tmp`, and uploads it to Amazon S3.
 After a successful upload, it records the file in the DynamoDB downloaded-file
 registry.
 
+Each response includes `s3_bucket`, `s3_key`, and the canonical `s3_uri` for
+downstream Step Functions processing.
+
 The Lambda is designed to run inside a Step Functions `Map` state. Each
 invocation receives one item from the availability check's `new_files` array.
 

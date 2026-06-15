@@ -4,16 +4,55 @@ on:
   push:
     branches:
       - develop
-      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: us-east-1
+  FUNCTION_NAME: caged-dev-download
 
 jobs:
   deploy:
-    uses: Stentzler/lambda-cicd/.github/workflows/lambda-python-sam.yml@main
-    with:
-      lambda_name: download
-      python_version: "3.14"
-      aws_region: us-east-1
-      dev_branch: develop
-      prod_branch: main
-    secrets:
-      aws_deploy_role_arn: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Run tests and lint
+        run: |
+          uv run pytest
+          uv run ruff check .
+          uv run ruff format --check .
+
+      - name: Package Lambda
+        run: make package
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy function code
+        run: |
+          aws lambda update-function-code \
+            --function-name "$FUNCTION_NAME" \
+            --zip-file fileb://dist/download-lambda.zip
+          aws lambda wait function-updated-v2 --function-name "$FUNCTION_NAME"

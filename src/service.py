@@ -171,6 +171,7 @@ class DownloadService:
             "reference_year": request.reference_year,
             "s3_bucket": self.settings.S3_BUCKET_NAME,
             "s3_key": request.s3_key,
+            "s3_uri": f"s3://{self.settings.S3_BUCKET_NAME}/{request.s3_key}",
         }
         if size_bytes is not None:
             response["size_bytes"] = size_bytes
